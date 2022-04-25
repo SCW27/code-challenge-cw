@@ -33,14 +33,20 @@ io.on("connection", (socket) => {
   socket.on("join_chat", async (data: joinRoomInterface) => {
     console.log(data);
     try {
-      let user = await User.findById(data.room);
-      if (!user) {
-        user = new User({ name: data.room });
-        user.save();
+      const user = await User.find({
+        name: {
+          $eq: data.room
+        }
+      });
+      console.log(user);
+      if (user.length === 0) {
+        const newUser = new User({ name: data.room });
+        newUser.save();
       }
       socket.join(data.room);
       socket.broadcast.emit("user_online");
-      console.log(`Joined ${data.id} - ${data.room}`);
+      console.log("erer");
+      // console.log(`Joined ${data.id} - ${data.room}`);
     } catch (e) {
       console.log(e);
     }

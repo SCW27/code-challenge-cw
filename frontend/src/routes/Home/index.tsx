@@ -16,8 +16,16 @@ const Home = () => {
     setSocket(s);
 
     s.on("user_list_update", (data) => {
-      console.log(data);
-      setUsers(data);
+      const nusers = data.filter((user) => {
+        // console.log(name);
+        // console.log(user.name);
+        if (user.name.toString() !== name.toString()) {
+          return user;
+        }
+        return;
+      });
+      console.log(nusers);
+      setUsers(nusers);
     });
   }, []);
 
@@ -60,7 +68,9 @@ const Home = () => {
           className="btn btn-success"
           onClick={() => {
             if (socket) {
-              socket.emit("join_chat");
+              socket.emit("join_chat", {
+                room: name
+              });
               getUsers();
             }
           }}
